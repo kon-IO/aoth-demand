@@ -4,7 +4,7 @@ import {
   subtract as sub,
   add,
   multiply as mul,
-  divide as div
+  divide as div,
 } from "mathjs";
 import "../styles/Table.css";
 import { fmt } from "../lib/format";
@@ -101,14 +101,16 @@ export default class Table extends React.Component {
                 onBlur={(i, e, x) => this.onEditableBlur(i, e, x)}
                 number={fmt(el[0])}
                 ind={ind}
-                isX={true} />
+                isX={true}
+              />
             </td>
             <td>
               <EditableTd
                 onBlur={(i, e, x) => this.onEditableBlur(i, e, x)}
                 number={fmt(el[1])}
                 ind={ind}
-                isX={false} />
+                isX={false}
+              />
             </td>
             <td>{fmt(el[2])}</td>
             <td>
