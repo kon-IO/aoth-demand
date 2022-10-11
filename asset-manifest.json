@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/aoth-demand/static/css/main.a69708f7.css",
-    "main.js": "/aoth-demand/static/js/main.cede272a.js",
+    "main.css": "/aoth-demand/static/css/main.a43bf1d2.css",
+    "main.js": "/aoth-demand/static/js/main.668a6b6a.js",
     "index.html": "/aoth-demand/index.html",
-    "main.a69708f7.css.map": "/aoth-demand/static/css/main.a69708f7.css.map",
-    "main.cede272a.js.map": "/aoth-demand/static/js/main.cede272a.js.map"
+    "main.a43bf1d2.css.map": "/aoth-demand/static/css/main.a43bf1d2.css.map",
+    "main.668a6b6a.js.map": "/aoth-demand/static/js/main.668a6b6a.js.map"
   },
   "entrypoints": [
-    "static/css/main.a69708f7.css",
-    "static/js/main.cede272a.js"
+    "static/css/main.a43bf1d2.css",
+    "static/js/main.668a6b6a.js"
   ]
 }
