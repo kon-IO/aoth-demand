@@ -5,6 +5,8 @@ import {
   add,
   multiply as mul,
   divide as div,
+  max,
+  number as toNum,
 } from "mathjs";
 import "../styles/Table.css";
 import { fmt } from "../lib/format";
@@ -12,13 +14,35 @@ import EditableTd from "./editable-td";
 import TableHead from "./table-head";
 import RemoveRowButton from "./remove-row-button";
 
+import {
+  Chart as ChartJS,
+  LinearScale,
+  CategoryScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Title,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(
+  LinearScale,
+  CategoryScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 export default class Table extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [
-        [frac(40), frac(50), frac(-1, 12)],
-        [frac(10), frac(40), frac(-12, 5)],
+        [frac(10), frac(40), frac(-4)],
+        [frac(50), frac(20), frac(-1, 10)],
       ],
     };
   }
@@ -29,8 +53,8 @@ export default class Table extends React.Component {
     this.calcEDs(arr);
   }
 
-  findED(q1, p1, q2, p2) {
-    return mul(div(sub(q1, q2), sub(p2, p1)), div(p1, p2));
+  findED(q1, q2, p1, p2) {
+    return mul(div(sub(q1, q2), sub(p1, p2)), div(p1, p2));
   }
 
   calcEDs(nArr = null) {
@@ -81,15 +105,11 @@ export default class Table extends React.Component {
   onEditableBlur(ind, event, isX) {
     const arr = this.state.data.slice();
     arr[ind][isX ? 0 : 1] = frac(event.target.innerText.replaceAll(/\s/g, ""));
-    this.setState({
-      data: arr,
-    });
-    this.calcEDs();
+    this.calcEDs(arr);
   }
 
-  render() {
-    const len = this.state.data.length;
-    const arr = this.state.data.map((el, ind) => {
+  renderTableBody() {
+    return this.state.data.map((el, ind) => {
       let ch = ind % 24;
       ch = ch + 913 < 930 ? ch + 913 : ch + 914;
       return (
@@ -118,25 +138,73 @@ export default class Table extends React.Component {
             </td>
           </tr>
           {/* {ind === len - 1 ? (
-                      ""
-                    ) : (
-                      <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{fmt(el[2])}</td>
-                        <td>{fmt(el[3])}</td>
-                      </tr>
-                    )} */}
+                            ""
+                          ) : (
+                            <tr>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td>{fmt(el[2])}</td>
+                              <td>{fmt(el[3])}</td>
+                            </tr>
+                          )} */}
         </React.Fragment>
       );
     });
+  }
 
+  renderChart() {
+    const arry = this.state.data.map((val) => val[1]);
+    const arrx = this.state.data.map((val) => val[0]);
+    const maxx = toNum(max(arrx));
+    const maxy = toNum(max(arry));
+    const options = {
+      responsive: true,
+      legend: {
+        position: "top",
+        labels: {
+          fontColor: "white",
+        },
+      },
+      scales: {
+        x: {
+          type: "linear",
+          beginAtZero: true,
+          ticks: {
+            fontColor: "white",
+          },
+        },
+        y: {
+          type: "linear",
+          beginAtZero: true
+        }
+        // pointLabels: {
+        //   fontColor: "white"
+        // }
+      }
+    };
+
+    const data = {
+      labels: arrx,
+      datasets: [
+        {
+          label: "Q",
+          data: toNum(arry),
+          backgroundColor: "rgb(255, 255, 255)",
+          borderColor: "rgb(255, 255, 255)",
+        },
+      ],
+    };
+
+    return <Line options={options} data={data} />;
+  }
+
+  render() {
     return (
       <div className="my-8 flex flex-col gap-6 justify-center items-center w-full">
         <table className="table">
           <TableHead />
-          <tbody>{arr}</tbody>
+          <tbody>{this.renderTableBody()}</tbody>
         </table>
         <button
           type="button"
@@ -157,6 +225,7 @@ export default class Table extends React.Component {
             ></path>
           </svg>
         </button>
+        <div className="w-[70%] h-96">{this.renderChart()}</div>
       </div>
     );
   }
